@@ -37,35 +37,52 @@ battle.on('start', function (data) {
 
 battle.on('turn', function (data) {
     console.log('TURN', data);
+    
     // TODO: render the characters
    
     var listHeroes = this.characters.allFrom("heroes");//aqui tenemos a los personajes de cada bando
     var listMonsters = this.characters.allFrom("monsters");
+
+    var HeroesIds = Object.keys(listHeroes); //necesitamos guardar los ids para el punto 2
+    var MonstersIds = Object.keys(listMonsters);
 
     var Party1 = document.getElementById('heroes'); //accedemos a cada seccion
     var Party2 = document.getElementById('monsters');
 
     var items, ch;
 
-    insert (Party1, listHeroes);
-    insert (Party2, listMonsters);
+    insert (Party1, listHeroes, HeroesIds);
+    insert (Party2, listMonsters, MonstersIds);
 
 	//creamos una funcion para no estar todo el rato haciendo lo mismo
-    function insert (Party, list) {
+    function insert (Party, list, ids) {
 
 		items = Party.querySelector('[class=character-list]'); //nos vamos al childnode que queremos
+		var aux = 0;
 
     	for (var i in list){
     		var li = document.createElement('li'); //creamos una lista de tipo <li>
     		ch = list[i];
+
+    		li.dataset.charaId = ids[aux]; //guardamos la etiqueta del personaje
 			li.innerHTML += ch.name + ' (HP: <strong>' + ch.hp + '</strong>/' 
   				+ ch.maxHp + ', MP: <strong>' + ch.mp + '</strong>/' + ch.maxMp + ')';
+
   			items.appendChild(li); //^la rellenamos y la añadimos a items (el childnodo que corresponde)
+  			aux++;
     	}
     }
 
     // TODO: highlight current character
+    var activeCh = data.activeCharacterId; //data nos da el id del personaje activo
+    var highlightCh = document.querySelector ('[data-chara-id= ' + activeCh + ']'); //cogemos el personaje de la lista HTML
+    highlightCh.classList.add ("active"); //le añadimos la clase active para que el css funcione
+    	//para que todo esto funcione necesitamos haber guardado el id 
+    		//del personaje en la lista <li>, por lo que hay que modificar la funcion insert
+
     // TODO: show battle actions form
+
+
 });
 
 battle.on('info', function (data) {
