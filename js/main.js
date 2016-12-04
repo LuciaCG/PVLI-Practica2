@@ -37,7 +37,7 @@ battle.on('start', function (data) {
 
 battle.on('turn', function (data) {
     console.log('TURN', data);
-    
+
     // TODO: render the characters
    
     var listHeroes = this.characters.allFrom("heroes");//aqui tenemos a los personajes de cada bando
@@ -82,7 +82,16 @@ battle.on('turn', function (data) {
 
     // TODO: show battle actions form
 
+    actionForm.style.display = 'inline'; //lo hacemos visible
+    var actions = this.options.list(); //cogemos la lista de acciones posibles
+    var options = actionForm.querySelector('[class=choices]'); //nos vamos al nodo correspondiente
 
+    for (var i in actions){
+    	var li = document.createElement('li');
+        li.innerHTML += '<label><input type="radio" name="option" value=' + actions[i] + '> ' + actions[i] + '</label>';
+    	options.appendChild(li);
+    }//lo rellenamos con la lista <li>
+    
 });
 
 battle.on('info', function (data) {
