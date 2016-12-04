@@ -74,6 +74,7 @@ battle.on('turn', function (data) {
     }
 
     // TODO: highlight current character
+
     var activeCh = data.activeCharacterId; //data nos da el id del personaje activo
     var highlightCh = document.querySelector ('[data-chara-id= ' + activeCh + ']'); //cogemos el personaje de la lista HTML
     highlightCh.classList.add ("active"); //le añadimos la clase active para que el css funcione
@@ -88,16 +89,17 @@ battle.on('turn', function (data) {
 
     for (var i in actions){
     	var li = document.createElement('li');
-        li.innerHTML += '<label><input type="radio" name="option" value=' + actions[i] + '> ' + actions[i] + '</label>';
+        li.innerHTML += '<label><input type="radio" name="option" value=' + actions[i] +  'required> ' + actions[i] + '</label>';
     	options.appendChild(li);
     }//lo rellenamos con la lista <li>
-    
+
 });
 
 battle.on('info', function (data) {
     console.log('INFO', data);
 
     // TODO: display turn info in the #battle-info panel
+
 });
 
 battle.on('end', function (data) {
@@ -117,8 +119,20 @@ window.onload = function () {
         evt.preventDefault();
 
         // TODO: select the action chosen by the player
+
+        var action = actionForm.elements['option'].value;
+        battle.options.select(action);
+
         // TODO: hide this menu
+
+        actionForm.style.display = 'none';
+
         // TODO: go to either select target menu, or to the select spell menu
+
+        if (action === 'attack') //se va a target
+            targetForm.style.display = 'inline';
+        else if (action === 'cast')//o al menu de hechizos
+            spellForm.style.display = 'inline';
     });
 
     targetForm.addEventListener('submit', function (evt) {
