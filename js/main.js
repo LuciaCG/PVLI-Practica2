@@ -163,7 +163,44 @@ battle.on('end', function (data) {
     console.log('END', data);
 
     // TODO: re-render the parties so the death of the last character gets reflected
+    var listHeroes = this.characters.allFrom("heroes");//aqui tenemos a los personajes de cada bando
+    var listMonsters = this.characters.allFrom("monsters");
+
+    var HeroesIds = Object.keys(listHeroes); //necesitamos guardar los ids para el punto 2
+    var MonstersIds = Object.keys(listMonsters);
+
+    var Party1 = document.getElementById('heroes'); //accedemos a cada seccion
+    var Party2 = document.getElementById('monsters');
+
+    var items, ch;
+
+    insert (Party1, listHeroes, HeroesIds);
+    insert (Party2, listMonsters, MonstersIds);
+
+    //creamos una funcion para no estar todo el rato haciendo lo mismo
+    function insert (Party, list, ids) {
+
+        items = Party.querySelector('[class=character-list]'); //nos vamos al childnode que queremos
+        var aux = 0;
+        items.innerHTML = "";
+
+        for (var i in list){
+            var li = document.createElement('li'); //creamos una lista de tipo <li>
+            ch = list[i];
+
+            if (ch.hp <= 0) li.classList.add('dead'); //si está muerto lo mostrará tachado
+
+            li.dataset.charaId = ids[aux]; //guardamos la etiqueta del personaje
+            li.innerHTML += ch.name + ' (HP: <strong>' + ch.hp + '</strong>/' 
+                + ch.maxHp + ', MP: <strong>' + ch.mp + '</strong>/' + ch.maxMp + ')';
+
+            items.appendChild(li); //^la rellenamos y la añadimos a items (el childnodo que corresponde)
+            aux++;
+        }
+    }
+
     // TODO: display 'end of battle' message, showing who won
+    infoPanel.innerHTML = 'Battle is over! Winners were: <strong>' + data.winner + '</strong>';
 });
 
 window.onload = function () {
