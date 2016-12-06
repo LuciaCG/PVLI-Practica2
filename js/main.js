@@ -65,7 +65,7 @@ battle.on('turn', function (data) {
     		var li = document.createElement('li'); //creamos una lista de tipo <li>
     		ch = list[i];
 
-            //if (ch.hp <= 0) li.dataset.dead = 'dead'; //si está muerto lo mostrará tachado
+            if (ch.hp <= 0) li.classList.add('dead'); //si está muerto lo mostrará tachado
 
     		li.dataset.charaId = ids[aux]; //guardamos la etiqueta del personaje
 			li.innerHTML += ch.name + ' (HP: <strong>' + ch.hp + '</strong>/' 
@@ -100,19 +100,21 @@ battle.on('turn', function (data) {
 
 
     //targets
-    var targets = this._charactersById; //cogemos la lista de acciones posibles
+    var targets = this._charactersById; //cogemos la lista de targets posibles
     var choices = targetForm.querySelector('[class=choices]'); //nos vamos al nodo correspondiente
     choices.innerHTML = "";
 
     for (var i in targets){
-        var li = document.createElement('li');
-        li.innerHTML += '<label><input type="radio" name="option" value="' + i +  '" required> ' + i + '</label>';
-        choices.appendChild(li);
+        if (targets[i]._hp > 0){
+            var li = document.createElement('li');
+            li.innerHTML += '<label><input type="radio" name="option" value="' + i +  '" required> ' + i + '</label>';
+            choices.appendChild(li);
+        }
     }//lo rellenamos con la lista <li>
 
 
     //spells
-    var spells = this._grimoires[this._activeCharacter.party];//cogemos la lista de acciones posibles
+    var spells = this._grimoires[this._activeCharacter.party];//cogemos la lista de hechizos posibles
     var choices = spellForm.querySelector('[class=choices]'); //nos vamos al nodo correspondiente
     choices.innerHTML = "";
     
@@ -152,7 +154,7 @@ battle.on('info', function (data) {
             var effectsTxt = prettifyEffect(data.effect || {}); //'causing ' + damage
             infoPanel.innerHTML += ' causing ' + effectsTxt + '.';
         }
-        else infoPanel.innerHTML += 'but was unsuccessful.';
+        else infoPanel.innerHTML += ' but was unsuccessful.';
     }
     
 });
