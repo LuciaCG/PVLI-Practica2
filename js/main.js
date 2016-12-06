@@ -110,20 +110,20 @@ battle.on('turn', function (data) {
         choices.appendChild(li);
     }//lo rellenamos con la lista <li>
 
-
     //spells
     var spells = this._grimoires[this._activeCharacter.party];//cogemos la lista de acciones posibles
     var choices = spellForm.querySelector('[class=choices]'); //nos vamos al nodo correspondiente
     choices.innerHTML = "";
-
+    
     for (var i in spells){
         var li = document.createElement('li');
         li.innerHTML += '<label><input type="radio" name="option" value="' + i +  '" required> ' + i + '</label>';
         choices.appendChild(li);
     }//lo rellenamos con la lista <li>
-    
-    //spellForm.button.disabled = true; //asi se deshabilita
-    //else spellForm.button.disabled = false; //asi se deja normal
+ 
+    if (choices.innerHTML === "") spellForm.querySelector('[type=submit]').disabled = true; //asi se deshabilita
+    else spellForm.querySelector('[type=submit]').disabled = false; //asi se deja normal
+
 });
 
 battle.on('info', function (data) {
