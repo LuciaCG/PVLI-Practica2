@@ -86,7 +86,7 @@ battle.on('turn', function (data) {
 
     // TODO: show battle actions form
 
-    actionForm.style.display = 'inline'; //lo hacemos visible
+    actionForm.style.display = 'block'; //lo hacemos visible
 
     var options = this.options.list(); //cogemos la lista de acciones posibles
     var choices = actionForm.querySelector('[class=choices]'); //nos vamos al nodo correspondiente
@@ -110,6 +110,7 @@ battle.on('turn', function (data) {
         choices.appendChild(li);
     }//lo rellenamos con la lista <li>
 
+
     //spells
     var spells = this._grimoires[this._activeCharacter.party];//cogemos la lista de acciones posibles
     var choices = spellForm.querySelector('[class=choices]'); //nos vamos al nodo correspondiente
@@ -131,16 +132,29 @@ battle.on('info', function (data) {
 
     // TODO: display turn info in the #battle-info panel
     
+    infoPanel.innerHTML = '<strong>' + data.activeCharacterId + '</strong> '; //wizz
 
-    /*var activeChTxt = prettifyEffect(data.activeCharacterId); //Wizz
-    var actionTxt = prettifyEffect(data.action); //cast + 'ed'
-    var scrollTxt = prettifyEffect(data.scrollName || {}); //fireball + 'on'
-    var targetTxt = prettifyEffect(data.targetId); //skeleton
-    var effectsTxt = prettifyEffect(data.effect || {}); //'causing ' + damage
+    if (data.action === "defend"){
+        infoPanel.innerHTML += 'defense ';
 
-    //infoPanel.innerHTML = activeChTxt + ' ' + actionTxt + 'ed ' + scrollTxt + 'on ' + targetTxt
-            //+ 'causing ' + effectsTxt;*/
+        if (data.success) infoPanel.innerHTML += 'improved to ' + data.newDefense + '.';
+        else infoPanel.innerHTML += 'was unsuccessful.'
+    }
+    else {
 
+        infoPanel.innerHTML += data.action + 'ed'; //cast-ed
+
+        if (data.action === "cast") infoPanel.innerHTML += '<i> ' + data.scrollName + '</i> on'; //fireball on
+
+        infoPanel.innerHTML += '<strong> ' + data.targetId + '</strong>'; //skeleton
+
+        if (data.success){
+            var effectsTxt = prettifyEffect(data.effect || {}); //'causing ' + damage
+            infoPanel.innerHTML += ' causing ' + effectsTxt + '.';
+        }
+        else infoPanel.innerHTML += 'but was unsuccessful.';
+    }
+    
 });
 
 battle.on('end', function (data) {
