@@ -106,7 +106,12 @@ battle.on('turn', function (data) {
     for (var i in targets){
         if (targets[i]._hp > 0){ //solo lo añadimos en la lista si está vivo
             var li = document.createElement('li');
-            li.innerHTML += '<label><input type="radio" name="option" value="' + i +  '" required> ' + i + '</label>';
+
+            if (targets[i].party === "heroes"){
+                li.innerHTML += '<heroe><label><input type="radio" name="option" value="' + i +  '" required> ' + i + '</label></heroe>';
+            }//las nuevas etiquetas (heroe y monst) dan colores diferentes a los miembros de cada party
+            else li.innerHTML += '<monst><label><input type="radio" name="option" value="' + i +  '" required> ' + i + '</label></monst>';
+
             choices.appendChild(li);
         }
     }//lo rellenamos con la lista <li>

@@ -31,6 +31,14 @@ button, input, select {
     font-size: 18px;
 }
 
+heroe {
+    color: #4CAF50;
+}
+
+monst {
+    color: #008CBA;
+}
+
 .parties {
     display: flex;
     justify-content: space-between;
