@@ -49,21 +49,19 @@ battle.on('turn', function (data) {
     var Party1 = document.getElementById('heroes'); //accedemos a cada seccion
     var Party2 = document.getElementById('monsters');
 
-    var items, ch;
-
     insert (Party1, listHeroes, HeroesIds);
     insert (Party2, listMonsters, MonstersIds);
 
 	//creamos una funcion para no estar todo el rato haciendo lo mismo
     function insert (Party, list, ids) {
 
-		items = Party.querySelector('[class=character-list]'); //nos vamos al childnode que queremos
+		var items = Party.querySelector('[class=character-list]'); //nos vamos al childnodo que queremos
 		var aux = 0;
-        items.innerHTML = "";
+        items.innerHTML = ""; //debemos inicializarlo fuera del bucle
 
     	for (var i in list){
     		var li = document.createElement('li'); //creamos una lista de tipo <li>
-    		ch = list[i];
+    		var ch = list[i];
 
             if (ch.hp <= 0) li.classList.add('dead'); //si está muerto lo mostrará tachado
 
@@ -81,13 +79,14 @@ battle.on('turn', function (data) {
     var activeCh = data.activeCharacterId; //data nos da el id del personaje activo
     var highlightCh = document.querySelector ('[data-chara-id= "' + activeCh + '" ]'); //cogemos el personaje de la lista HTML
     highlightCh.classList.add ('active'); //le añadimos la clase active para que el css funcione
-    	//para que todo esto funcione necesitamos haber guardado el id 
-    		//del personaje en la lista <li>, por lo que hay que modificar la funcion insert
+    	//para que todo esto funcione necesitamos haber guardado el id del personaje en la lista <li>
 
     // TODO: show battle actions form
 
-    actionForm.style.display = 'block'; //lo hacemos visible
+    actionForm.style.display = 'block'; //hacemos visible el formulario de acciones
 
+
+    ///////////////////ACCIONES\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     var options = this.options.list(); //cogemos la lista de acciones posibles
     var choices = actionForm.querySelector('[class=choices]'); //nos vamos al nodo correspondiente
     choices.innerHTML = "";
@@ -99,13 +98,13 @@ battle.on('turn', function (data) {
     }//lo rellenamos con la lista <li>
 
 
-    //targets
+    ///////////////////TARGETS\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     var targets = this._charactersById; //cogemos la lista de targets posibles
-    var choices = targetForm.querySelector('[class=choices]'); //nos vamos al nodo correspondiente
+    var choices = targetForm.querySelector('[class=choices]');
     choices.innerHTML = "";
 
     for (var i in targets){
-        if (targets[i]._hp > 0){
+        if (targets[i]._hp > 0){ //solo lo añadimos en la lista si está vivo
             var li = document.createElement('li');
             li.innerHTML += '<label><input type="radio" name="option" value="' + i +  '" required> ' + i + '</label>';
             choices.appendChild(li);
@@ -113,8 +112,8 @@ battle.on('turn', function (data) {
     }//lo rellenamos con la lista <li>
 
 
-    //spells
-    var spells = this._grimoires[this._activeCharacter.party];//cogemos la lista de hechizos posibles
+    //////////////////////SPELLS\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    var spells = this._grimoires[this._activeCharacter.party];//cogemos la lista de hechizos posibles para esta party
     var choices = spellForm.querySelector('[class=choices]'); //nos vamos al nodo correspondiente
     choices.innerHTML = "";
     
@@ -124,7 +123,7 @@ battle.on('turn', function (data) {
         choices.appendChild(li);
     }//lo rellenamos con la lista <li>
  
-    if (choices.innerHTML === "") spellForm.querySelector('[type=submit]').disabled = true; //asi se deshabilita
+    if (choices.innerHTML === "") spellForm.querySelector('[type=submit]').disabled = true; //asi se deshabilita el boton si no hay hechizos disponibles
     else spellForm.querySelector('[type=submit]').disabled = false; //asi se deja normal
 
 });
@@ -166,13 +165,11 @@ battle.on('end', function (data) {
     var listHeroes = this.characters.allFrom("heroes");//aqui tenemos a los personajes de cada bando
     var listMonsters = this.characters.allFrom("monsters");
 
-    var HeroesIds = Object.keys(listHeroes); //necesitamos guardar los ids para el punto 2
+    var HeroesIds = Object.keys(listHeroes); //vamos a guardar las etiquetas otra vez
     var MonstersIds = Object.keys(listMonsters);
 
     var Party1 = document.getElementById('heroes'); //accedemos a cada seccion
     var Party2 = document.getElementById('monsters');
-
-    var items, ch;
 
     insert (Party1, listHeroes, HeroesIds);
     insert (Party2, listMonsters, MonstersIds);
@@ -180,13 +177,13 @@ battle.on('end', function (data) {
     //creamos una funcion para no estar todo el rato haciendo lo mismo
     function insert (Party, list, ids) {
 
-        items = Party.querySelector('[class=character-list]'); //nos vamos al childnode que queremos
+        var items = Party.querySelector('[class=character-list]'); //nos vamos al childnode que queremos
         var aux = 0;
         items.innerHTML = "";
 
         for (var i in list){
             var li = document.createElement('li'); //creamos una lista de tipo <li>
-            ch = list[i];
+            var ch = list[i];
 
             if (ch.hp <= 0) li.classList.add('dead'); //si está muerto lo mostrará tachado
 
@@ -201,6 +198,10 @@ battle.on('end', function (data) {
 
     // TODO: display 'end of battle' message, showing who won
     infoPanel.innerHTML = 'Battle is over! Winners were: <strong>' + data.winner + '</strong>';
+
+    //opcional: un boton para emepezar otra partida
+    infoPanel.innerHTML += '<form name="reset"><p><button type="submit">Play again</button></p>';
+
 });
 
 window.onload = function () {
