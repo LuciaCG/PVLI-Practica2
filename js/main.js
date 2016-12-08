@@ -12,24 +12,40 @@ function prettifyEffect(obj) {
 
 battle.setup({
     heroes: {
-        members: [
-            RPG.entities.characters.heroTank,
-            RPG.entities.characters.heroWizard
-        ],
+        members: membersRandom("hero"),
         grimoire: [
             RPG.entities.scrolls.health,
             RPG.entities.scrolls.fireball
         ]
     },
     monsters: {
-        members: [
-            RPG.entities.characters.monsterSlime,
-            RPG.entities.characters.monsterBat,
-            RPG.entities.characters.monsterSkeleton,
-            RPG.entities.characters.monsterBat
-        ]
+        members: membersRandom("monster"),
     }
 });
+
+function membersRandom(partyId){
+
+    personajes = Object.keys(RPG.entities.characters); //necesitamos los nombres de los personajes
+    myArr = []; //un array vacio
+    size = Math.floor(Math.random() * 4) + 1; //y un numero aleatorio (1-4)
+    
+    var aux = 0;
+    while (aux < size){ //seguir hasta completar array
+
+        var ch = personajes[Math.floor(Math.random() * personajes.length)]; //coger un personaje aleatorio del RPG
+
+        if (ch.substr(0, partyId.length) === 'hero'){ //comprobamos si es de la party que queremos
+            myArr.push(RPG.entities.characters[ch]);//si lo es lo añadimos a nuestro array
+            aux++; //y continuamos
+        }
+
+        if (ch.substr(0, partyId.length) === 'monster'){ //comprobamos si es de la party que queremos
+            myArr.push(RPG.entities.characters[ch]);//si lo es lo añadimos a nuestro array
+            aux++; //y continuamos
+        }
+    }
+    return myArr;
+};
 
 battle.on('start', function (data) {
     console.log('START', data);
@@ -109,7 +125,7 @@ battle.on('turn', function (data) {
 
             if (targets[i].party === "heroes"){
                 li.innerHTML += '<heroe><label><input type="radio" name="option" value="' + i +  '" required> ' + i + '</label></heroe>';
-            }//las nuevas etiquetas (heroe y monst) dan colores diferentes a los miembros de cada party
+            }//las nuevas etiquetas (heroe y monst) dan colores diferentes a los miembros de cada party gracias al css modificado
             else li.innerHTML += '<monst><label><input type="radio" name="option" value="' + i +  '" required> ' + i + '</label></monst>';
 
             choices.appendChild(li);
